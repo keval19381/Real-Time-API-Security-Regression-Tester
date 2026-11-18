@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time API Security Regression Platform (DAST)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes pulse-subtle { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    .pulse-live { animation: pulse-subtle 2s infinite ease-in-out; }
+    pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased flex flex-col font-sans">
+  
+  <!-- Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
+        🛡️
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+          Real-Time API Security Regression Tester
+          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 pulse-live">LIVE DAST</span>
+        </h1>
+        <p class="text-xs text-slate-400">Continuous CI/CD Change Detection & Multi-Tenant Regression Scanner</p>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-2">
+      <button onclick="triggerWebhook()" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+        🚀 Simulate Deploy Webhook
+      </button>
+      <button onclick="runPipeline()" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition">
+        ⚡ Run DAST Pipeline
+      </button>
+      <button onclick="toggleAppMode()" id="btn-toggle-mode" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition">
+        🔄 Mode: Checking...
+      </button>
+      <button onclick="retestTickets()" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20 transition">
+        ✅ Retest & Auto-Resolve
+      </button>
+      <span class="flex items-center gap-1.5 pl-2 border-l border-slate-700">
+        <span class="text-xs text-slate-500">WebSocket:</span>
+        <span id="ws-status" class="text-amber-400 font-bold text-xs">🟡 Connecting…</span>
+      </span>
+    </div>
+  </header>
+
+  <!-- Metric Badges Bar -->
+  <main class="flex-1 p-6 space-y-6 max-w-7xl w-full mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <p class="text-xs font-medium text-slate-400">Total Inventory</p>
+        <p id="stat-total" class="text-2xl font-bold text-white mt-1">-</p>
+        <span class="text-[11px] text-slate-500">Documented & Discovered</span>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <p class="text-xs font-medium text-slate-400">Active Endpoints</p>
+        <p id="stat-active" class="text-2xl font-bold text-emerald-400 mt-1">-</p>
+        <span class="text-[11px] text-emerald-500/80">Runtime Verified (&lt;30d)</span>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <p class="text-xs font-medium text-slate-400">Shadow Endpoints</p>
+        <p id="stat-shadow" class="text-2xl font-bold text-amber-400 mt-1">-</p>
+        <span class="text-[11px] text-amber-500/80">Omitted from OpenAPI</span>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <p class="text-xs font-medium text-slate-400">Zombie Endpoints</p>
+        <p id="stat-zombie" class="text-2xl font-bold text-slate-400 mt-1">-</p>
+        <span class="text-[11px] text-slate-500">0 Traffic in &gt;30d</span>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <p class="text-xs font-medium text-slate-400">Confirmed Flaws</p>
+        <p id="stat-open-tickets" class="text-2xl font-bold text-rose-400 mt-1">-</p>
+        <span class="text-[11px] text-rose-500/80">Reproduced & Ticketed</span>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+        <p class="text-xs font-medium text-slate-400">Auto-Resolved</p>
+        <p id="stat-resolved-tickets" class="text-2xl font-bold text-teal-400 mt-1">-</p>
+        <span class="text-[11px] text-teal-500/80">Verified Patched</span>
+      </div>
+    </div>
+
+    <!-- Safety Telemetry Banner -->
+    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 text-xs">
+      <div class="flex items-center space-x-4">
+        <span class="flex items-center gap-1.5 font-medium text-slate-300">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+          Safety Guard: <span class="text-emerald-400 font-bold">Active</span>
+        </span>
+        <span class="text-slate-400">Allowlist: <span class="text-slate-200">localhost, 127.0.0.1</span></span>
+        <span class="text-slate-400">Rate Limiter: <span id="safety-rate" class="text-slate-200">-</span></span>
+        <span class="text-slate-400">Circuit Breaker: <span id="safety-cb" class="text-emerald-400 font-bold">CLOSED</span></span>
+      </div>
+      <div class="flex items-center space-x-3">
+        <span class="text-slate-400">Audit Chain: <span id="safety-chain" class="text-emerald-400 font-bold">Verified Intact (SHA-256)</span></span>
+        <button onclick="verifyAuditChain()" class="text-indigo-400 hover:text-indigo-300 font-semibold underline">Verify Cryptographic Integrity</button>
+      </div>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="border-b border-slate-800 flex space-x-6 text-sm font-medium">
+      <button onclick="switchTab('tickets')" id="tab-btn-tickets" class="pb-3 border-b-2 border-indigo-500 text-indigo-400 font-semibold">
+        🎯 Confirmed Flaws & Tickets (<span id="tab-count-tickets">0</span>)
+      </button>
+      <button onclick="switchTab('inventory')" id="tab-btn-inventory" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+        📋 API Inventory (<span id="tab-count-inventory">0</span>)
+      </button>
+      <button onclick="switchTab('graph')" id="tab-btn-graph" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+        🕸️ Workflow Topology Graph
+      </button>
+      <button onclick="switchTab('audit')" id="tab-btn-audit" class="pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+        ⛓️ Hash-Chained Audit Log
+      </button>
+    </div>
+
+    <!-- TAB 1: TICKETS -->
+    <div id="tab-content-tickets" class="space-y-4">
+      <div class="flex justify-between items-center">
+        <h2 class="text-sm font-semibold text-slate-300">Automated Security Ticket Board (Reproduced &amp; Verified)</h2>
+        <span class="text-xs text-slate-500">Impact Formula: 5*(Financial) + 4*(PII) + 3*(Auth) + 1*(Hygiene)</span>
+      </div>
+      <div id="ticket-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="text-slate-500 text-sm italic col-span-2 py-8 text-center">Loading security tickets...</div>
+      </div>
+    </div>
+
+    <!-- TAB 2: INVENTORY -->
+    <div id="tab-content-inventory" class="hidden space-y-4">
+      <div class="flex flex-wrap justify-between items-center gap-3">
+        <div class="flex items-center space-x-2">
+          <input type="text" id="inventory-search" placeholder="Search path or method..." oninput="filterInventory()" class="bg-slate-900 border border-slate-800 text-slate-200 text-xs px-3 py-1.5 rounded-md focus:outline-none focus:border-indigo-500 w-64">
+          <select id="inventory-status-filter" onchange="filterInventory()" class="bg-slate-900 border border-slate-800 text-slate-200 text-xs px-3 py-1.5 rounded-md focus:outline-none">
+            <option value="ALL">All Statuses</option>
+            <option value="Active">Active Only</option>
+            <option value="shadow">Shadow Only</option>
+            <option value="zombie">Zombie Only</option>
+          </select>
+        </div>
+        <button onclick="exportCSV()" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          📥 Export Inventory CSV
+        </button>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-950/60 text-slate-400 font-semibold border-b border-slate-800">
+            <tr>
+              <th class="p-3">Method</th>
+              <th class="p-3">Path</th>
+              <th class="p-3">Status</th>
+              <th class="p-3">In OpenAPI</th>
+              <th class="p-3">In Crawler</th>
+              <th class="p-3">30d Requests</th>
+              <th class="p-3">Allowed Roles</th>
+            </tr>
+          </thead>
+          <tbody id="inventory-table-body" class="divide-y divide-slate-800/60 font-mono text-[11px]">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: TOPOLOGY GRAPH -->
+    <div id="tab-content-graph" class="hidden space-y-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+        <h3 class="text-sm font-semibold text-slate-300 mb-2">NetworkX Multi-Role Workflow Graph</h3>
+        <p class="text-xs text-slate-400 mb-6">Discovered endpoint sequence transitions walked by the Playwright authenticated session crawler.</p>
+        <div id="graph-visualization" class="space-y-4"></div>
+      </div>
+    </div>
+
+    <!-- TAB 4: AUDIT LOG -->
+    <div id="tab-content-audit" class="hidden space-y-4">
+      <div class="flex justify-between items-center">
+        <h3 class="text-sm font-semibold text-slate-300">Append-Only Cryptographic Hash Chain (Tamper-Evident)</h3>
+        <button onclick="verifyAuditChain()" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-indigo-600 hover:bg-indigo-500 text-white transition">
+          🛡️ Run Full Chain Verification
+        </button>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-950/60 text-slate-400 font-semibold border-b border-slate-800">
+            <tr>
+              <th class="p-3 w-12">Index</th>
+              <th class="p-3">Method &amp; URL</th>
+              <th class="p-3 w-16">Status</th>
+              <th class="p-3">Previous Hash</th>
+              <th class="p-3">Chained Entry Hash</th>
+            </tr>
+          </thead>
+          <tbody id="audit-table-body" class="divide-y divide-slate-800/60 font-mono text-[11px]">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 hidden bg-indigo-600 text-white text-xs px-4 py-2.5 rounded-lg shadow-xl font-medium border border-indigo-400/30 z-50"></div>
+
+  <script>
+    let currentAppMode = "vulnerable";
+    let inventoryData = [];
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.classList.remove("hidden");
+      setTimeout(() => toast.classList.add("hidden"), 3500);
+    }
+
+    function switchTab(tab) {
+      ["tickets", "inventory", "graph", "audit"].forEach(t => {
+        document.getElementById(`tab-content-${t}`).classList.add("hidden");
+        document.getElementById(`tab-btn-${t}`).className = "pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200";
+      });
+      document.getElementById(`tab-content-${tab}`).classList.remove("hidden");
+      document.getElementById(`tab-btn-${tab}`).className = "pb-3 border-b-2 border-indigo-500 text-indigo-400 font-semibold";
+      if (tab === "graph") loadGraph();
+      if (tab === "audit") loadAudit();
+    }
+
+    async function checkHealthAndMode() {
+      try {
+        const res = await fetch("http://127.0.0.1:8001/health");
+        const data = await res.json();
+        currentAppMode = data.mode;
+        const btn = document.getElementById("btn-toggle-mode");
+        if (data.mode === "vulnerable") {
+          btn.innerHTML = "⚠️ Mode: Vulnerable (Buggy)";
+          btn.className = "px-3 py-1.5 text-xs font-semibold rounded-md bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 transition";
+        } else {
+          btn.innerHTML = "🛡️ Mode: Fixed (Secure)";
+          btn.className = "px-3 py-1.5 text-xs font-semibold rounded-md bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 transition";
+        }
+      } catch (e) {
+        document.getElementById("btn-toggle-mode").innerHTML = "❌ Target App Offline";
+      }
+    }
+
+    async function toggleAppMode() {
+      const newVulnerable = (currentAppMode !== "vulnerable");
+      try {
+        const res = await fetch(`http://127.0.0.1:8001/admin/set-mode?vulnerable=${newVulnerable}`, {method: "POST"});
+        const data = await res.json();
+        showToast(`Target App switched to ${data.mode.toUpperCase()} mode.`);
+        await checkHealthAndMode();
+      } catch (e) {
+        showToast("Error toggling target app mode.");
+      }
+    }
+
+    async function loadMetrics() {
+      try {
+        const sumRes = await fetch("/api/inventory/summary");
+        const sum = await sumRes.json();
+        document.getElementById("stat-total").textContent = sum.total_endpoints;
+        document.getElementById("stat-active").textContent = sum.active_endpoints;
+        document.getElementById("stat-shadow").textContent = sum.shadow_endpoints;
+        document.getElementById("stat-zombie").textContent = sum.zombie_endpoints;
+        document.getElementById("tab-count-inventory").textContent = sum.total_endpoints;
+
+        const safetyRes = await fetch("/api/safety/status");
+        const safety = await safetyRes.json();
+        document.getElementById("safety-rate").textContent = `${safety.safety_guard.rate_limiter.available_tokens} tokens`;
+        document.getElementById("safety-cb").textContent = safety.safety_guard.circuit_breaker.state;
+      } catch (e) {}
+    }
+
+    async function loadTickets() {
+      try {
+        const res = await fetch("/api/tickets");
+        const tickets = await res.json();
+        const container = document.getElementById("ticket-cards-container");
+        document.getElementById("tab-count-tickets").textContent = tickets.length;
+
+        const openCount = tickets.filter(t => t.status !== "RESOLVED").length;
+        const resolvedCount = tickets.filter(t => t.status === "RESOLVED").length;
+        document.getElementById("stat-open-tickets").textContent = openCount;
+        document.getElementById("stat-resolved-tickets").textContent = resolvedCount;
+
+        if (tickets.length === 0) {
+          container.innerHTML = '<div class="text-slate-500 text-sm italic col-span-2 py-8 text-center">No vulnerability tickets filed yet. Run DAST Pipeline to execute checks.</div>';
+          return;
+        }
+
+        container.innerHTML = tickets.map(t => {
+          const isResolved = (t.status === "RESOLVED");
+          const sevColor = t.severity === "CRITICAL" ? "bg-rose-500/10 text-rose-400 border-rose-500/20" :
+                           t.severity === "HIGH" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" :
+                           "bg-blue-500/10 text-blue-400 border-blue-500/20";
+          const statusBadge = isResolved
+            ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-500/10 text-teal-300 border border-teal-500/20">RESOLVED</span>'
+            : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-300 border border-rose-500/20 pulse-live">CONFIRMED</span>';
+
+          return `
+            <div class="bg-slate-900 border ${isResolved ? 'border-teal-500/30' : 'border-slate-800'} rounded-xl p-5 space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${sevColor}">${t.severity}</span>
+                    <span class="text-xs font-mono text-slate-400">${t.ticket_id}</span>
+                    ${statusBadge}
+                  </div>
+                  <h3 class="text-sm font-bold text-white mt-1.5">${t.title}</h3>
+                </div>
+                <div class="text-right">
+                  <span class="text-lg font-black text-slate-200">${t.impact_score}</span>
+                  <span class="block text-[10px] text-slate-500">Risk Score</span>
+                </div>
+              </div>
+
+              <div class="text-xs text-slate-300 space-y-1 bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">
+                <p><strong class="text-slate-400">Target Endpoint:</strong> <code class="text-indigo-300">${t.target_endpoint}</code></p>
+                <p><strong class="text-slate-400">Impact:</strong> ${t.financial_summary}</p>
+                ${t.pii_fields_exposed.length > 0 ? `<p><strong class="text-slate-400">PII Leaked:</strong> <span class="text-rose-300">${t.pii_fields_exposed.join(", ")}</span></p>` : ''}
+                <p><strong class="text-slate-400">Remediation:</strong> <span class="text-emerald-300">${t.remediation_guide}</span></p>
+              </div>
+
+              ${isResolved ? `
+                <div class="text-xs bg-teal-950/30 border border-teal-800/40 p-2.5 rounded text-teal-300">
+                  ✅ <strong>Mitigation Verified:</strong> Retest confirmed target rejected reproduction request with HTTP ${t.expected_secure_status}. Resolved at ${new Date(t.resolved_at).toLocaleTimeString()}.
+                </div>
+              ` : `
+                <div>
+                  <p class="text-[11px] font-semibold text-slate-400 mb-1">Minimal Reproduction cURL:</p>
+                  <pre class="bg-slate-950 text-[10px] p-2.5 rounded border border-slate-800 overflow-x-auto text-amber-200/90 whitespace-pre">${t.reproduction_curl}</pre>
+                </div>
+              `}
+            </div>
+          `;
+        }).join("");
+      } catch (e) {}
+    }
+
+    async function loadInventory() {
+      try {
+        const res = await fetch("/api/inventory");
+        inventoryData = await res.json();
+        renderInventoryTable(inventoryData);
+      } catch (e) {}
+    }
+
+    function renderInventoryTable(items) {
+      const tbody = document.getElementById("inventory-table-body");
+      tbody.innerHTML = items.map(item => {
+        const methodColor = item.method === "GET" ? "bg-blue-500/10 text-blue-400" :
+                            item.method === "POST" ? "bg-emerald-500/10 text-emerald-400" : "bg-purple-500/10 text-purple-400";
+        const statusBadge = item.status === "Active" ? "<span class='text-emerald-400 font-semibold'>Active</span>" :
+                            item.status.includes("shadow") ? "<span class='text-amber-400 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded'>Shadow</span>" :
+                            "<span class='text-slate-400 font-semibold bg-slate-800 px-1.5 py-0.5 rounded'>Zombie</span>";
+
+        return `
+          <tr class="hover:bg-slate-800/30 transition">
+            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${methodColor}">${item.method}</span></td>
+            <td class="p-3 text-white font-medium">${item.path}</td>
+            <td class="p-3">${statusBadge}</td>
+            <td class="p-3">${item.in_openapi ? '✅ Yes' : '❌ No'}</td>
+            <td class="p-3">${item.in_crawler ? '✅ Yes' : '—'}</td>
+            <td class="p-3 font-semibold text-slate-200">${item.traffic_count_last_30d}</td>
+            <td class="p-3 text-slate-400">${item.allowed_roles.join(", ") || 'All'}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function filterInventory() {
+      const query = document.getElementById("inventory-search").value.toLowerCase();
+      const statusFilter = document.getElementById("inventory-status-filter").value;
+      const filtered = inventoryData.filter(i => {
+        const matchesQuery = i.path.toLowerCase().includes(query) || i.method.toLowerCase().includes(query);
+        const matchesStatus = (statusFilter === "ALL") || i.status.toLowerCase().includes(statusFilter.toLowerCase());
+        return matchesQuery && matchesStatus;
+      });
+      renderInventoryTable(filtered);
+    }
+
+    function exportCSV() {
+      let csv = "Method,Path,Status,In_OpenAPI,In_Crawler,Traffic_Last_30d,Allowed_Roles\n";
+      inventoryData.forEach(i => {
+        csv += `"${i.method}","${i.path}","${i.status}",${i.in_openapi},${i.in_crawler},${i.traffic_count_last_30d},"${i.allowed_roles.join(';')}"\n`;
+      });
+      const blob = new Blob([csv], {type: "text/csv"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `api_inventory_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+
+    async function loadGraph() {
+      try {
+        const res = await fetch("/api/graph");
+        const graph = await res.json();
+        const container = document.getElementById("graph-visualization");
+        
+        container.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-center">
+              <span class="text-[10px] text-slate-500 font-bold block">STEP 1</span>
+              <p class="text-xs font-bold text-emerald-400 mt-1">GET /flights/search</p>
+              <span class="text-[10px] text-slate-400 block mt-1">Role: sub_agent, admin</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-center">
+              <span class="text-[10px] text-slate-500 font-bold block">STEP 2</span>
+              <p class="text-xs font-bold text-emerald-400 mt-1">POST /flights/hold</p>
+              <span class="text-[10px] text-slate-400 block mt-1">Fare Lock (15m window)</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-center">
+              <span class="text-[10px] text-slate-500 font-bold block">STEP 3</span>
+              <p class="text-xs font-bold text-rose-400 mt-1">POST /bookings</p>
+              <span class="text-[10px] text-rose-300 block mt-1">⚠️ BOLA Vulnerability</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-center">
+              <span class="text-[10px] text-slate-500 font-bold block">STEP 4</span>
+              <p class="text-xs font-bold text-rose-400 mt-1">POST /bookings/{id}/pay</p>
+              <span class="text-[10px] text-rose-300 block mt-1">⚠️ Price Tampering</span>
+            </div>
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-center">
+              <span class="text-[10px] text-slate-500 font-bold block">STEP 5</span>
+              <p class="text-xs font-bold text-rose-400 mt-1">POST /bookings/{id}/cancel</p>
+              <span class="text-[10px] text-rose-300 block mt-1">⚠️ Double Refund</span>
+            </div>
+          </div>
+          <div class="mt-4 p-3 bg-slate-950/80 rounded border border-slate-800 flex justify-between text-xs text-slate-400">
+            <span><strong>Discovered Graph Nodes:</strong> ${graph.nodes ? graph.nodes.length : 0}</span>
+            <span><strong>Discovered Transitions:</strong> ${graph.links ? graph.links.length : 0}</span>
+            <span><strong>Engine:</strong> NetworkX Multi-Role Directed Graph</span>
+          </div>
+        `;
+      } catch (e) {}
+    }
+
+    async function loadAudit() {
+      try {
+        const res = await fetch("/api/safety/audit?limit=25");
+        const entries = await res.json();
+        const tbody = document.getElementById("audit-table-body");
+        tbody.innerHTML = entries.map(e => `
+          <tr class="hover:bg-slate-800/30 transition">
+            <td class="p-3 text-slate-400 font-bold">${e.entry_index}</td>
+            <td class="p-3 text-slate-200 font-semibold">${e.method} <span class="text-indigo-300">${e.url}</span></td>
+            <td class="p-3"><span class="px-1.5 py-0.5 rounded font-bold ${e.response_status === 200 ? 'text-emerald-400 bg-emerald-500/10' : 'text-amber-400 bg-amber-500/10'}">${e.response_status}</span></td>
+            <td class="p-3 text-[10px] text-slate-500">${e.prev_hash.slice(0, 16)}...</td>
+            <td class="p-3 text-[10px] text-emerald-400 font-bold">${e.entry_hash.slice(0, 24)}...</td>
+          </tr>
+        `).join("");
+      } catch (e) {}
+    }
+
+    async function verifyAuditChain() {
+      try {
+        const res = await fetch("/api/safety/verify");
+        const data = await res.json();
+        if (data.valid) {
+          showToast(`✅ ${data.details}`);
+        } else {
+          showToast(`❌ Tamper Detected: ${data.details}`);
+        }
+      } catch (e) {
+        showToast("Error verifying audit chain.");
+      }
+    }
+
+    async function triggerWebhook() {
+      showToast("Triggering CI/CD deployment webhook...");
+      try {
+        const res = await fetch("/webhook/deploy", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            event: "deployment",
+            version: "v2.0.0",
+            commit_sha: "c7d8e9f01a2b",
+            bundle_url: "http://127.0.0.1:8001/static/app.v2.js"
+          })
+        });
+        const data = await res.json();
+        showToast(`Deployment webhook accepted: Commit ${data.commit_sha}`);
+        await refreshAll();
+      } catch (e) {
+        showToast("Error triggering webhook.");
+      }
+    }
+
+    async function runPipeline() {
+      showToast("Executing full DAST regression pipeline...");
+      try {
+        const res = await fetch("/api/pipeline/run", {method: "POST"});
+        const data = await res.json();
+        showToast(`DAST complete: ${data.findings_count} findings filed & verified.`);
+        await refreshAll();
+      } catch (e) {
+        showToast("Error running pipeline.");
+      }
+    }
+
+    async function retestTickets() {
+      showToast("Re-testing open tickets against target app...");
+      try {
+        const res = await fetch("/api/tickets/retest", {method: "POST"});
+        const data = await res.json();
+        const resolved = data.filter(d => d.status === "RESOLVED").length;
+        showToast(`Retest finished: ${resolved} tickets resolved.`);
+        await refreshAll();
+      } catch (e) {
+        showToast("Error re-testing tickets.");
+      }
+    }
+
+    async function refreshAll() {
+      await checkHealthAndMode();
+      await loadMetrics();
+      await loadTickets();
+      await loadInventory();
+    }
+
+    // Initial load
+    refreshAll();
+
+    // ---------------------------------------------------------------------------
+    // WebSocket live-event stream — receives push notifications from the backend
+    // ---------------------------------------------------------------------------
+    let ws = null;
+    let wsReconnectTimer = null;
+
+    function connectWebSocket() {
+      if (ws && ws.readyState <= 1) return;  // already open or connecting
+      ws = new WebSocket("ws://127.0.0.1:8000/ws/events");
+
+      ws.onopen = () => {
+        console.log("[WS] Connected to live event stream");
+        const el = document.getElementById("ws-status");
+        if (el) { el.textContent = "🟢 Live"; el.className = "text-emerald-400 font-bold text-xs"; }
+        if (wsReconnectTimer) { clearTimeout(wsReconnectTimer); wsReconnectTimer = null; }
+      };
+
+      ws.onmessage = (evt) => {
+        try {
+          const msg = JSON.parse(evt.data);
+          handleWsEvent(msg);
+        } catch (e) {}
+      };
+
+      ws.onerror = () => {
+        const el = document.getElementById("ws-status");
+        if (el) { el.textContent = "🔴 Disconnected"; el.className = "text-rose-400 font-bold text-xs"; }
+      };
+
+      ws.onclose = () => {
+        const el = document.getElementById("ws-status");
+        if (el) { el.textContent = "🟡 Reconnecting…"; el.className = "text-amber-400 font-bold text-xs"; }
+        wsReconnectTimer = setTimeout(connectWebSocket, 3000);
+      };
+    }
+
+    function handleWsEvent(msg) {
+      const { event, data } = msg;
+      if (event === "deployment") {
+        showToast(`🚀 Deploy received: ${data.shadow_count} shadow, ${data.zombie_count} zombie routes.`);
+        refreshAll();
+      } else if (event === "pipeline_complete") {
+        showToast(`⚡ Pipeline complete: ${data.findings_count}/${data.total_tests} findings confirmed.`);
+        refreshAll();
+      } else if (event === "retest_complete") {
+        showToast(`✅ Retest: ${data.resolved} tickets resolved, ${data.unfixed} still open.`);
+        refreshAll();
+      }
+    }
+
+    connectWebSocket();
+  </script>
+</body>
+</html>

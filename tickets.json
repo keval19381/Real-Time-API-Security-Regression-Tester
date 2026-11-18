@@ -1,0 +1,1088 @@
+[
+  {
+    "ticket_id": "TICK-BIZ-3B0837",
+    "test_id": "TEST-BIZ-FARE-01",
+    "title": "BUSINESS_LOGIC: Verify server rejects client-manipulated $1.00 fare for a $590.00 ticket.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "BUSINESS_LOGIC",
+    "target_endpoint": "POST /api/v1/bookings/{booking_id}/pay",
+    "impact_score": 31,
+    "financial_summary": "High financial loss: Server confirms booking using arbitrary client-submitted price.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9902/pay\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"amount\": 1.0, \"payment_method\": \"corporate_credit\"}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9902/pay",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "amount": 1.0,
+        "payment_method": "corporate_credit"
+      }
+    },
+    "expected_secure_status": 400,
+    "remediation_guide": "In routes/pay.py, validate submitted amount against server-side hold locked fare (booking.total_amount). Reject price tampering with 400 Bad Request.",
+    "created_at": "2026-11-18T13:51:31.520548",
+    "resolved_at": "2026-11-18T13:51:59.746375",
+    "resolution_evidence": {
+      "retest_status": 400,
+      "expected_status": 400,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:59.746375",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 400."
+    }
+  },
+  {
+    "ticket_id": "TICK-BIZ-299292",
+    "test_id": "TEST-BIZ-FARE-01",
+    "title": "BUSINESS_LOGIC: Verify server rejects client-manipulated $1.00 fare for a $590.00 ticket.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "BUSINESS_LOGIC",
+    "target_endpoint": "POST /api/v1/bookings/{booking_id}/pay",
+    "impact_score": 31,
+    "financial_summary": "High financial loss: Server confirms booking using arbitrary client-submitted price.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9902/pay\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"amount\": 1.0, \"payment_method\": \"corporate_credit\"}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9902/pay",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "amount": 1.0,
+        "payment_method": "corporate_credit"
+      }
+    },
+    "expected_secure_status": 400,
+    "remediation_guide": "In routes/pay.py, validate submitted amount against server-side hold locked fare (booking.total_amount). Reject price tampering with 400 Bad Request.",
+    "created_at": "2026-11-17T08:34:40.185972",
+    "resolved_at": "2026-11-18T13:51:30.586238",
+    "resolution_evidence": {
+      "retest_status": 400,
+      "expected_status": 400,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:30.586238",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 400."
+    }
+  },
+  {
+    "ticket_id": "TICK-BIZ-0F4313",
+    "test_id": "TEST-BIZ-FARE-01",
+    "title": "BUSINESS_LOGIC: Verify server rejects client-manipulated $1.00 fare for a $590.00 ticket.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "BUSINESS_LOGIC",
+    "target_endpoint": "POST /api/v1/bookings/{booking_id}/pay",
+    "impact_score": 31,
+    "financial_summary": "High financial loss: Server confirms booking using arbitrary client-submitted price.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9902/pay\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"amount\": 1.0, \"payment_method\": \"corporate_credit\"}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9902/pay",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "amount": 1.0,
+        "payment_method": "corporate_credit"
+      }
+    },
+    "expected_secure_status": 400,
+    "remediation_guide": "In routes/pay.py, validate submitted amount against server-side hold locked fare (booking.total_amount). Reject price tampering with 400 Bad Request.",
+    "created_at": "2026-11-17T08:26:47.738632",
+    "resolved_at": "2026-11-17T08:26:48.145377",
+    "resolution_evidence": {
+      "retest_status": 400,
+      "expected_status": 400,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:26:48.145377",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 400."
+    }
+  },
+  {
+    "ticket_id": "TICK-BIZ-62ED54",
+    "test_id": "TEST-BIZ-FARE-01",
+    "title": "BUSINESS_LOGIC: Verify server rejects client-manipulated $1.00 fare for a $590.00 ticket.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "BUSINESS_LOGIC",
+    "target_endpoint": "POST /api/v1/bookings/{booking_id}/pay",
+    "impact_score": 31,
+    "financial_summary": "High financial loss: Server confirms booking using arbitrary client-submitted price.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9902/pay\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"amount\": 1.0, \"payment_method\": \"corporate_credit\"}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9902/pay",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "amount": 1.0,
+        "payment_method": "corporate_credit"
+      }
+    },
+    "expected_secure_status": 400,
+    "remediation_guide": "In routes/pay.py, validate submitted amount against server-side hold locked fare (booking.total_amount). Reject price tampering with 400 Bad Request.",
+    "created_at": "2026-11-17T08:24:35.966226",
+    "resolved_at": "2026-11-17T08:26:21.648290",
+    "resolution_evidence": {
+      "retest_status": 400,
+      "expected_status": 400,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:26:21.648290",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 400."
+    }
+  },
+  {
+    "ticket_id": "TICK-AUTH-CB3D6C",
+    "test_id": "TEST-AUTH-BOLA-01",
+    "title": "AUTHORIZATION_BOUNDARY: Verify Agency Apex sub-agent cannot read Agency Global booking record.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "AUTHORIZATION_BOUNDARY",
+    "target_endpoint": "GET /api/v1/bookings/{booking_id}",
+    "impact_score": 28,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [
+      "passenger_name",
+      "passenger_email",
+      "passport_number",
+      "booking_id",
+      "agency_id"
+    ],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 403,
+    "remediation_guide": "Enforce tenant authorization check in routes/book.py: verify booking.agency_id == current_user.agency_id before returning booking data. Return 403 Forbidden on mismatch.",
+    "created_at": "2026-11-18T13:51:31.457194",
+    "resolved_at": "2026-11-18T13:51:59.770424",
+    "resolution_evidence": {
+      "retest_status": 403,
+      "expected_status": 403,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:59.770424",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 403."
+    }
+  },
+  {
+    "ticket_id": "TICK-AUTH-635655",
+    "test_id": "TEST-AUTH-BOLA-01",
+    "title": "BOLA Cross-Tenant Data Leak",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "AUTHORIZATION_BOUNDARY",
+    "target_endpoint": "GET /api/v1/bookings/{booking_id}",
+    "impact_score": 28,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [
+      "passenger_name",
+      "passenger_email",
+      "passport_number",
+      "booking_id",
+      "agency_id"
+    ],
+    "reproduction_curl": "curl -X GET http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub"
+      }
+    },
+    "expected_secure_status": 403,
+    "remediation_guide": "Enforce tenant authorization check in routes/book.py: verify booking.agency_id == current_user.agency_id before returning booking data. Return 403 Forbidden on mismatch.",
+    "created_at": "2026-11-17T08:34:40.103199",
+    "resolved_at": "2026-11-18T13:51:30.608861",
+    "resolution_evidence": {
+      "retest_status": 403,
+      "expected_status": 403,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:30.608861",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 403."
+    }
+  },
+  {
+    "ticket_id": "TICK-AUTH-D861D3",
+    "test_id": "TEST-AUTH-BOLA-01",
+    "title": "BOLA Cross-Tenant Data Leak",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "AUTHORIZATION_BOUNDARY",
+    "target_endpoint": "GET /api/v1/bookings/{booking_id}",
+    "impact_score": 28,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [
+      "passenger_name",
+      "passenger_email",
+      "passport_number",
+      "booking_id",
+      "agency_id"
+    ],
+    "reproduction_curl": "curl -X GET http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub"
+      }
+    },
+    "expected_secure_status": 403,
+    "remediation_guide": "Enforce tenant authorization check in routes/book.py: verify booking.agency_id == current_user.agency_id before returning booking data. Return 403 Forbidden on mismatch.",
+    "created_at": "2026-11-17T08:34:39.124160",
+    "resolved_at": "2026-11-17T08:34:39.247678",
+    "resolution_evidence": {
+      "retest_status": 403,
+      "expected_status": 403,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:34:39.247678",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 403."
+    }
+  },
+  {
+    "ticket_id": "TICK-AUTH-7827CF",
+    "test_id": "TEST-AUTH-BOLA-01",
+    "title": "AUTHORIZATION_BOUNDARY: Verify Agency Apex sub-agent cannot read Agency Global booking record.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "AUTHORIZATION_BOUNDARY",
+    "target_endpoint": "GET /api/v1/bookings/{booking_id}",
+    "impact_score": 28,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [
+      "passenger_name",
+      "passenger_email",
+      "passport_number",
+      "booking_id",
+      "agency_id"
+    ],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 403,
+    "remediation_guide": "Enforce tenant authorization check in routes/book.py: verify booking.agency_id == current_user.agency_id before returning booking data. Return 403 Forbidden on mismatch.",
+    "created_at": "2026-11-17T08:26:47.676908",
+    "resolved_at": "2026-11-17T08:26:48.177904",
+    "resolution_evidence": {
+      "retest_status": 403,
+      "expected_status": 403,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:26:48.177904",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 403."
+    }
+  },
+  {
+    "ticket_id": "TICK-AUTH-0143C1",
+    "test_id": "TEST-AUTH-BOLA-01",
+    "title": "AUTHORIZATION_BOUNDARY: Verify Agency Apex sub-agent cannot read Agency Global booking record.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "AUTHORIZATION_BOUNDARY",
+    "target_endpoint": "GET /api/v1/bookings/{booking_id}",
+    "impact_score": 28,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [
+      "passenger_name",
+      "passenger_email",
+      "passport_number",
+      "booking_id",
+      "agency_id"
+    ],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 403,
+    "remediation_guide": "Enforce tenant authorization check in routes/book.py: verify booking.agency_id == current_user.agency_id before returning booking data. Return 403 Forbidden on mismatch.",
+    "created_at": "2026-11-17T08:24:35.870923",
+    "resolved_at": "2026-11-17T08:26:21.681515",
+    "resolution_evidence": {
+      "retest_status": 403,
+      "expected_status": 403,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:26:21.681515",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 403."
+    }
+  },
+  {
+    "ticket_id": "TICK-AUTH-DD5146",
+    "test_id": "TEST-AUTH-BOLA-01",
+    "title": "BOLA Cross-Tenant Data Leak",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "AUTHORIZATION_BOUNDARY",
+    "target_endpoint": "GET /api/v1/bookings/{booking_id}",
+    "impact_score": 28,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [
+      "passenger_name",
+      "passenger_email",
+      "passport_number",
+      "booking_id",
+      "agency_id"
+    ],
+    "reproduction_curl": "curl -X GET http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-GLOBAL-8802",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub"
+      }
+    },
+    "expected_secure_status": 403,
+    "remediation_guide": "Enforce tenant authorization check in routes/book.py: verify booking.agency_id == current_user.agency_id before returning booking data. Return 403 Forbidden on mismatch.",
+    "created_at": "2026-11-17T08:24:34.270912",
+    "resolved_at": "2026-11-17T08:24:34.422971",
+    "resolution_evidence": {
+      "retest_status": 403,
+      "expected_status": 403,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:24:34.422971",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 403."
+    }
+  },
+  {
+    "ticket_id": "TICK-AUTH-03DC98",
+    "test_id": "TEST-AUTH-BFLA-01",
+    "title": "ROLE_BOUNDARY: Verify standard Sub-Agent role cannot access supervisor commission reports and override tokens.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "ROLE_BOUNDARY",
+    "target_endpoint": "GET /api/v1/agency/commissions",
+    "impact_score": 22,
+    "financial_summary": "Confidential financial intelligence and override tokens exposed to standard sub-agents.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/agency/commissions\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/agency/commissions",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 403,
+    "remediation_guide": "In routes/admin.py, add RBAC guard: verify current_user.role == 'agency_admin' before returning commission statements. Return 403 Forbidden for sub-agents.",
+    "created_at": "2026-11-18T13:51:31.702889",
+    "resolved_at": "2026-11-18T13:51:59.808275",
+    "resolution_evidence": {
+      "retest_status": 403,
+      "expected_status": 403,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:59.808275",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 403."
+    }
+  },
+  {
+    "ticket_id": "TICK-AUTH-97FFE4",
+    "test_id": "TEST-AUTH-BFLA-01",
+    "title": "ROLE_BOUNDARY: Verify standard Sub-Agent role cannot access supervisor commission reports and override tokens.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "ROLE_BOUNDARY",
+    "target_endpoint": "GET /api/v1/agency/commissions",
+    "impact_score": 22,
+    "financial_summary": "Confidential financial intelligence and override tokens exposed to standard sub-agents.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/agency/commissions\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/agency/commissions",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 403,
+    "remediation_guide": "In routes/admin.py, add RBAC guard: verify current_user.role == 'agency_admin' before returning commission statements. Return 403 Forbidden for sub-agents.",
+    "created_at": "2026-11-17T08:34:40.366689",
+    "resolved_at": "2026-11-18T13:51:30.630769",
+    "resolution_evidence": {
+      "retest_status": 403,
+      "expected_status": 403,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:30.630769",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 403."
+    }
+  },
+  {
+    "ticket_id": "TICK-AUTH-33F86F",
+    "test_id": "TEST-AUTH-BFLA-01",
+    "title": "ROLE_BOUNDARY: Verify standard Sub-Agent role cannot access supervisor commission reports and override tokens.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "ROLE_BOUNDARY",
+    "target_endpoint": "GET /api/v1/agency/commissions",
+    "impact_score": 22,
+    "financial_summary": "Confidential financial intelligence and override tokens exposed to standard sub-agents.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/agency/commissions\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/agency/commissions",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 403,
+    "remediation_guide": "In routes/admin.py, add RBAC guard: verify current_user.role == 'agency_admin' before returning commission statements. Return 403 Forbidden for sub-agents.",
+    "created_at": "2026-11-17T08:26:47.914517",
+    "resolved_at": "2026-11-17T08:26:48.200879",
+    "resolution_evidence": {
+      "retest_status": 403,
+      "expected_status": 403,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:26:48.200879",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 403."
+    }
+  },
+  {
+    "ticket_id": "TICK-AUTH-E66EB5",
+    "test_id": "TEST-AUTH-BFLA-01",
+    "title": "ROLE_BOUNDARY: Verify standard Sub-Agent role cannot access supervisor commission reports and override tokens.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "ROLE_BOUNDARY",
+    "target_endpoint": "GET /api/v1/agency/commissions",
+    "impact_score": 22,
+    "financial_summary": "Confidential financial intelligence and override tokens exposed to standard sub-agents.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/agency/commissions\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/agency/commissions",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 403,
+    "remediation_guide": "In routes/admin.py, add RBAC guard: verify current_user.role == 'agency_admin' before returning commission statements. Return 403 Forbidden for sub-agents.",
+    "created_at": "2026-11-17T08:24:36.139203",
+    "resolved_at": "2026-11-17T08:26:21.706484",
+    "resolution_evidence": {
+      "retest_status": 403,
+      "expected_status": 403,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:26:21.706484",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 403."
+    }
+  },
+  {
+    "ticket_id": "TICK-BIZ-429FE0",
+    "test_id": "TEST-BIZ-REFUND-01",
+    "title": "BUSINESS_LOGIC: Verify duplicate cancellation requests do not issue multiple refund payouts.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "BUSINESS_LOGIC",
+    "target_endpoint": "POST /api/v1/bookings/{booking_id}/cancel",
+    "impact_score": 20,
+    "financial_summary": "Duplicate payout risk: Concurrent or sequential cancellation emits multiple cash refunds.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9901/cancel\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9901/cancel",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 400,
+    "remediation_guide": "In routes/cancel.py, enforce strict state machine locking. If booking.status == 'CANCELLED', reject subsequent requests with 400 Bad Request.",
+    "created_at": "2026-11-18T13:51:31.626072",
+    "resolved_at": "2026-11-18T13:51:59.872232",
+    "resolution_evidence": {
+      "retest_status": 400,
+      "expected_status": 400,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:59.872232",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 400."
+    }
+  },
+  {
+    "ticket_id": "TICK-BIZ-0795C7",
+    "test_id": "TEST-BIZ-REFUND-01",
+    "title": "BUSINESS_LOGIC: Verify duplicate cancellation requests do not issue multiple refund payouts.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "BUSINESS_LOGIC",
+    "target_endpoint": "POST /api/v1/bookings/{booking_id}/cancel",
+    "impact_score": 20,
+    "financial_summary": "Duplicate payout risk: Concurrent or sequential cancellation emits multiple cash refunds.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9901/cancel\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9901/cancel",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 400,
+    "remediation_guide": "In routes/cancel.py, enforce strict state machine locking. If booking.status == 'CANCELLED', reject subsequent requests with 400 Bad Request.",
+    "created_at": "2026-11-17T08:34:40.297000",
+    "resolved_at": "2026-11-18T13:51:30.672066",
+    "resolution_evidence": {
+      "retest_status": 400,
+      "expected_status": 400,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:30.672066",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 400."
+    }
+  },
+  {
+    "ticket_id": "TICK-BIZ-DAC17F",
+    "test_id": "TEST-BIZ-REFUND-01",
+    "title": "BUSINESS_LOGIC: Verify duplicate cancellation requests do not issue multiple refund payouts.",
+    "severity": "CRITICAL",
+    "status": "RESOLVED",
+    "category": "BUSINESS_LOGIC",
+    "target_endpoint": "POST /api/v1/bookings/{booking_id}/cancel",
+    "impact_score": 20,
+    "financial_summary": "Duplicate payout risk: Concurrent or sequential cancellation emits multiple cash refunds.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9901/cancel\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/bookings/BKG-APEX-9901/cancel",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 400,
+    "remediation_guide": "In routes/cancel.py, enforce strict state machine locking. If booking.status == 'CANCELLED', reject subsequent requests with 400 Bad Request.",
+    "created_at": "2026-11-17T08:24:36.060674",
+    "resolved_at": "2026-11-17T08:34:39.289713",
+    "resolution_evidence": {
+      "retest_status": 400,
+      "expected_status": 400,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:34:39.289713",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 400."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-70D866",
+    "test_id": "TEST-HYGIENE-SHADOW-01",
+    "title": "API_HYGIENE: Verify shadow promotions route omitted from OpenAPI spec is surfaced for governance.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "POST /api/v1/promotions/apply",
+    "impact_score": 4,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/promotions/apply\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"promo_code\": \"SUMMER26\", \"booking_amount\": 1000.0}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/promotions/apply",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "promo_code": "SUMMER26",
+        "booking_amount": 1000.0
+      }
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Include shadow route in public OpenAPI spec (remove include_in_schema=False in routes/shadow.py) or retire route if decommissioned.",
+    "created_at": "2026-11-18T14:30:14.127118",
+    "resolved_at": "2026-11-18T14:30:45.272065",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T14:30:45.272065",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-59E967",
+    "test_id": "TEST-HYGIENE-SHADOW-01",
+    "title": "API_HYGIENE: Verify shadow promotions route omitted from OpenAPI spec is surfaced for governance.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "POST /api/v1/promotions/apply",
+    "impact_score": 4,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/promotions/apply\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"promo_code\": \"SUMMER26\", \"booking_amount\": 1000.0}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/promotions/apply",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "promo_code": "SUMMER26",
+        "booking_amount": 1000.0
+      }
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Include shadow route in public OpenAPI spec (remove include_in_schema=False in routes/shadow.py) or retire route if decommissioned.",
+    "created_at": "2026-11-18T13:51:59.540915",
+    "resolved_at": "2026-11-18T13:51:59.907043",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:59.907043",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-D6B726",
+    "test_id": "TEST-HYGIENE-SHADOW-01",
+    "title": "API_HYGIENE: Verify shadow promotions route omitted from OpenAPI spec is surfaced for governance.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "POST /api/v1/promotions/apply",
+    "impact_score": 4,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/promotions/apply\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"promo_code\": \"SUMMER26\", \"booking_amount\": 1000.0}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/promotions/apply",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "promo_code": "SUMMER26",
+        "booking_amount": 1000.0
+      }
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Include shadow route in public OpenAPI spec (remove include_in_schema=False in routes/shadow.py) or retire route if decommissioned.",
+    "created_at": "2026-11-18T13:51:31.783598",
+    "resolved_at": "2026-11-18T13:51:32.046935",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:32.046935",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-2828AB",
+    "test_id": "TEST-HYGIENE-SHADOW-01",
+    "title": "API_HYGIENE: Verify shadow promotions route omitted from OpenAPI spec is surfaced for governance.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "POST /api/v1/promotions/apply",
+    "impact_score": 4,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/promotions/apply\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"promo_code\": \"SUMMER26\", \"booking_amount\": 1000.0}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/promotions/apply",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "promo_code": "SUMMER26",
+        "booking_amount": 1000.0
+      }
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Include shadow route in public OpenAPI spec (remove include_in_schema=False in routes/shadow.py) or retire route if decommissioned.",
+    "created_at": "2026-11-17T08:34:40.437799",
+    "resolved_at": "2026-11-17T08:34:40.793313",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:34:40.793313",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-9E218C",
+    "test_id": "TEST-HYGIENE-SHADOW-01",
+    "title": "API_HYGIENE: Verify shadow promotions route omitted from OpenAPI spec is surfaced for governance.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "POST /api/v1/promotions/apply",
+    "impact_score": 4,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/promotions/apply\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"promo_code\": \"SUMMER26\", \"booking_amount\": 1000.0}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/promotions/apply",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "promo_code": "SUMMER26",
+        "booking_amount": 1000.0
+      }
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Include shadow route in public OpenAPI spec (remove include_in_schema=False in routes/shadow.py) or retire route if decommissioned.",
+    "created_at": "2026-11-17T08:26:47.991619",
+    "resolved_at": "2026-11-17T08:26:48.242063",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:26:48.242063",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-63882E",
+    "test_id": "TEST-HYGIENE-SHADOW-01",
+    "title": "API_HYGIENE: Verify shadow promotions route omitted from OpenAPI spec is surfaced for governance.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "POST /api/v1/promotions/apply",
+    "impact_score": 4,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/promotions/apply\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"promo_code\": \"SUMMER26\", \"booking_amount\": 1000.0}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/promotions/apply",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "promo_code": "SUMMER26",
+        "booking_amount": 1000.0
+      }
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Include shadow route in public OpenAPI spec (remove include_in_schema=False in routes/shadow.py) or retire route if decommissioned.",
+    "created_at": "2026-11-17T08:26:21.445172",
+    "resolved_at": "2026-11-17T08:26:21.745610",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:26:21.745610",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-E8AFE4",
+    "test_id": "TEST-HYGIENE-SHADOW-01",
+    "title": "API_HYGIENE: Verify shadow promotions route omitted from OpenAPI spec is surfaced for governance.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "POST /api/v1/promotions/apply",
+    "impact_score": 4,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X POST \"http://127.0.0.1:8001/api/v1/promotions/apply\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"promo_code\": \"SUMMER26\", \"booking_amount\": 1000.0}'",
+    "reproduction_request": {
+      "method": "POST",
+      "url": "http://127.0.0.1:8001/api/v1/promotions/apply",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "promo_code": "SUMMER26",
+        "booking_amount": 1000.0
+      }
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Include shadow route in public OpenAPI spec (remove include_in_schema=False in routes/shadow.py) or retire route if decommissioned.",
+    "created_at": "2026-11-17T08:24:36.227489",
+    "resolved_at": "2026-11-17T08:24:36.423741",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:24:36.423741",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-FCB1D7",
+    "test_id": "TEST-HYGIENE-ZOMBIE-01",
+    "title": "API_HYGIENE: Verify deprecated legacy XML rates endpoint has zero recent traffic and flag for decommissioning.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "GET /api/v1/legacy/xml-rates",
+    "impact_score": 3,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Decommission legacy XML endpoint (routes/legacy.py) or migrate legacy consumers to /api/v1/flights/search.",
+    "created_at": "2026-11-18T14:30:14.210373",
+    "resolved_at": "2026-11-18T14:30:45.297498",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T14:30:45.297498",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-6CA626",
+    "test_id": "TEST-HYGIENE-ZOMBIE-01",
+    "title": "API_HYGIENE: Verify deprecated legacy XML rates endpoint has zero recent traffic and flag for decommissioning.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "GET /api/v1/legacy/xml-rates",
+    "impact_score": 3,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Decommission legacy XML endpoint (routes/legacy.py) or migrate legacy consumers to /api/v1/flights/search.",
+    "created_at": "2026-11-18T13:51:59.639942",
+    "resolved_at": "2026-11-18T13:51:59.935263",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:59.935263",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-C73450",
+    "test_id": "TEST-HYGIENE-ZOMBIE-01",
+    "title": "API_HYGIENE: Verify deprecated legacy XML rates endpoint has zero recent traffic and flag for decommissioning.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "GET /api/v1/legacy/xml-rates",
+    "impact_score": 3,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Decommission legacy XML endpoint (routes/legacy.py) or migrate legacy consumers to /api/v1/flights/search.",
+    "created_at": "2026-11-18T13:51:31.894346",
+    "resolved_at": "2026-11-18T13:51:32.066222",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-18T13:51:32.066222",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-B15510",
+    "test_id": "TEST-HYGIENE-ZOMBIE-01",
+    "title": "API_HYGIENE: Verify deprecated legacy XML rates endpoint has zero recent traffic and flag for decommissioning.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "GET /api/v1/legacy/xml-rates",
+    "impact_score": 3,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Decommission legacy XML endpoint (routes/legacy.py) or migrate legacy consumers to /api/v1/flights/search.",
+    "created_at": "2026-11-17T08:34:40.534409",
+    "resolved_at": "2026-11-17T08:34:40.820906",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:34:40.820906",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-45ADB5",
+    "test_id": "TEST-HYGIENE-ZOMBIE-01",
+    "title": "API_HYGIENE: Verify deprecated legacy XML rates endpoint has zero recent traffic and flag for decommissioning.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "GET /api/v1/legacy/xml-rates",
+    "impact_score": 3,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Decommission legacy XML endpoint (routes/legacy.py) or migrate legacy consumers to /api/v1/flights/search.",
+    "created_at": "2026-11-17T08:26:48.055562",
+    "resolved_at": "2026-11-17T08:26:48.270762",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:26:48.270762",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-2EADBE",
+    "test_id": "TEST-HYGIENE-ZOMBIE-01",
+    "title": "API_HYGIENE: Verify deprecated legacy XML rates endpoint has zero recent traffic and flag for decommissioning.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "GET /api/v1/legacy/xml-rates",
+    "impact_score": 3,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Decommission legacy XML endpoint (routes/legacy.py) or migrate legacy consumers to /api/v1/flights/search.",
+    "created_at": "2026-11-17T08:26:21.530622",
+    "resolved_at": "2026-11-17T08:26:21.770518",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:26:21.770518",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  },
+  {
+    "ticket_id": "TICK-HYGIENE-39239A",
+    "test_id": "TEST-HYGIENE-ZOMBIE-01",
+    "title": "API_HYGIENE: Verify deprecated legacy XML rates endpoint has zero recent traffic and flag for decommissioning.",
+    "severity": "LOW",
+    "status": "RESOLVED",
+    "category": "API_HYGIENE",
+    "target_endpoint": "GET /api/v1/legacy/xml-rates",
+    "impact_score": 3,
+    "financial_summary": "No direct financial exposure identified.",
+    "pii_fields_exposed": [],
+    "reproduction_curl": "curl -X GET \"http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA\" \\\n  -H \"Authorization: Bearer token-apex-sub\" \\\n  -H \"Content-Type: application/json\"",
+    "reproduction_request": {
+      "method": "GET",
+      "url": "http://127.0.0.1:8001/api/v1/legacy/xml-rates?carrier=BA",
+      "headers": {
+        "Authorization": "Bearer token-apex-sub",
+        "Content-Type": "application/json"
+      },
+      "json": null
+    },
+    "expected_secure_status": 200,
+    "remediation_guide": "Decommission legacy XML endpoint (routes/legacy.py) or migrate legacy consumers to /api/v1/flights/search.",
+    "created_at": "2026-11-17T08:24:36.306454",
+    "resolved_at": "2026-11-17T08:24:36.448604",
+    "resolution_evidence": {
+      "retest_status": 200,
+      "expected_status": 200,
+      "verified_fixed": true,
+      "retest_timestamp": "2026-11-17T08:24:36.448604",
+      "notes": "Vulnerability successfully mitigated. Target returned expected secure status 200."
+    }
+  }
+]
