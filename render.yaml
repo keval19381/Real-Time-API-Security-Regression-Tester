@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: real-time-api-dast
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    healthCheckPath: /health

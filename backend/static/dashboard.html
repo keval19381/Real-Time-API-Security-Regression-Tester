@@ -226,7 +226,7 @@
 
     async function checkHealthAndMode() {
       try {
-        const res = await fetch("http://127.0.0.1:8001/health");
+        const res = await fetch("/api/target/health");
         const data = await res.json();
         currentAppMode = data.mode;
         const btn = document.getElementById("btn-toggle-mode");
@@ -245,7 +245,7 @@
     async function toggleAppMode() {
       const newVulnerable = (currentAppMode !== "vulnerable");
       try {
-        const res = await fetch(`http://127.0.0.1:8001/admin/set-mode?vulnerable=${newVulnerable}`, {method: "POST"});
+        const res = await fetch(`/api/target/set-mode?vulnerable=${newVulnerable}`, {method: "POST"});
         const data = await res.json();
         showToast(`Target App switched to ${data.mode.toUpperCase()} mode.`);
         await checkHealthAndMode();
@@ -475,8 +475,7 @@
           body: JSON.stringify({
             event: "deployment",
             version: "v2.0.0",
-            commit_sha: "c7d8e9f01a2b",
-            bundle_url: "http://127.0.0.1:8001/static/app.v2.js"
+            commit_sha: "c7d8e9f01a2b"
           })
         });
         const data = await res.json();
@@ -530,7 +529,9 @@
 
     function connectWebSocket() {
       if (ws && ws.readyState <= 1) return;  // already open or connecting
-      ws = new WebSocket("ws://127.0.0.1:8000/ws/events");
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsUrl = `${protocol}//${window.location.host}/ws/events`;
+      ws = new WebSocket(wsUrl);
 
       ws.onopen = () => {
         console.log("[WS] Connected to live event stream");

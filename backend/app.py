@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 import uuid
 import asyncio
+import httpx
 
 from backend.config import backend_settings
 from backend.models import (
@@ -88,6 +89,36 @@ def health_check():
         "target_app_url": backend_settings.TARGET_APP_URL,
         "timestamp": datetime.utcnow().isoformat()
     }
+
+@app.get("/api/target/health")
+def target_health():
+    """Proxies health check to target app for dashboard clients."""
+    try:
+        with httpx.Client(timeout=3.0) as client:
+            res = client.get(f"{backend_settings.TARGET_APP_URL}/health")
+            return res.json()
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Target app unreachable: {str(e)}")
+
+@app.post("/api/target/set-mode")
+def target_set_mode(vulnerable: bool):
+    """Proxies vulnerability toggle to target app for dashboard clients."""
+    try:
+        with httpx.Client(timeout=3.0) as client:
+            res = client.post(f"{backend_settings.TARGET_APP_URL}/admin/set-mode?vulnerable={str(vulnerable).lower()}")
+            return res.json()
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Target app unreachable: {str(e)}")
+
+@app.post("/api/target/reset-state")
+def target_reset_state():
+    """Proxies database state reset to target app for dashboard clients."""
+    try:
+        with httpx.Client(timeout=3.0) as client:
+            res = client.post(f"{backend_settings.TARGET_APP_URL}/admin/reset-state")
+            return res.json()
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Target app unreachable: {str(e)}")
 
 # ---------------------------------------------------------------------------
 # WebSocket live-event stream — dashboard connects here for push updates
