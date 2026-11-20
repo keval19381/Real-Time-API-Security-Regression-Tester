@@ -377,6 +377,16 @@ def run_dast_regression_pipeline(background_tasks: BackgroundTasks, version: Opt
     return result
 
 @app.get("/", response_class=HTMLResponse)
+@app.get("/landing", response_class=HTMLResponse)
+def serve_landing_page():
+    """Serves the UI/UX Pro Max marketing landing page for the SaaS product."""
+    landing_file = os.path.join(os.path.dirname(__file__), "static", "landing.html")
+    if os.path.exists(landing_file):
+        with open(landing_file, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    # Fallback to dashboard if landing file not found
+    return serve_dashboard()
+
 @app.get("/dashboard", response_class=HTMLResponse)
 def serve_dashboard():
     """Serves the standalone live telemetry dashboard."""
